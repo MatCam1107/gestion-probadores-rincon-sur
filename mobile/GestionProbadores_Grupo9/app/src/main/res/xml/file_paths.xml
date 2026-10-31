@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Coincide con CapturaFotoUtil: File(context.filesDir, "prendas_olvidadas") -->
+    <files-path name="prendas_olvidadas" path="prendas_olvidadas/" />
+</paths>
