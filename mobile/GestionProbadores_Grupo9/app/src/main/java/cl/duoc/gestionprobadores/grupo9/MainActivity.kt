@@ -5,18 +5,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import cl.duoc.gestionprobadores.grupo9.ui.PanelProbadoresScreen
-import cl.duoc.gestionprobadores.grupo9.ui.theme.GestionProbadores_Grupo9Theme
-import cl.duoc.gestionprobadores.grupo9.viewmodel.ProbadorViewModel
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cl.duoc.gestionprobadores.grupo9.navegations.AppNavigation
+import cl.duoc.gestionprobadores.grupo9.view.theme.GestionProbadoresTheme
+import cl.duoc.gestionprobadores.grupo9.viewmodels.IncidenciaViewModel
+import cl.duoc.gestionprobadores.grupo9.viewmodels.LoginViewModel
+import cl.duoc.gestionprobadores.grupo9.viewmodels.ProbadorViewModel
+import cl.duoc.gestionprobadores.grupo9.viewmodels.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: ProbadorViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
+    private val probadorViewModel: ProbadorViewModel by viewModels()
+    private val incidenciaViewModel: IncidenciaViewModel by viewModels()
+    private val usuarioViewModel: UsuarioViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,18 +27,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            GestionProbadores_Grupo9Theme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        PanelProbadoresScreen(
-                            probadores = viewModel.probadores
-                        )
-                    }
-                }
+            val loginState by loginViewModel.uiState.collectAsStateWithLifecycle()
+            GestionProbadoresTheme(modoAdministrador = loginState.usuario?.esAdministrador() == true) {
+                AppNavigation(loginViewModel, probadorViewModel, incidenciaViewModel, usuarioViewModel)
             }
         }
     }
